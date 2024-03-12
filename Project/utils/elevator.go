@@ -26,7 +26,7 @@ func ElevatorPrint(es Elevator) {
 			"  |dirn  = %-12.12s|\n"+
 			"  |behav = %-12.12s|\n",
 		es.Floor,
-		DirnToString(es.Dirn), 
+		DirnToString(es.Dirn),
 		EbToString(es.Behaviour),
 	)
 	fmt.Println("  +--------------------+")
@@ -48,11 +48,11 @@ func ElevatorPrint(es Elevator) {
 
 func ElevatorInitialized() Elevator {
 	return Elevator{
-		Floor:     1,
-		Dirn:      D_Stop,
-		Behaviour: EB_Idle,
+		Floor:               1,
+		Dirn:                D_Stop,
+		Behaviour:           EB_Idle,
 		ClearRequestVariant: CV_All,
-		DoorOpenDuration_s:   3.0,
-		ID: "5",
+		DoorOpenDuration_s:  3.0,
+		ID:                  "5",
 	}
 }

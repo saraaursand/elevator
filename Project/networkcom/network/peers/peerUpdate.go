@@ -2,12 +2,11 @@ package peers
 
 import (
 	"Elevator/driver-go-master/elevio"
-	"Elevator/networkcom"
-	"Elevator/utils"
+	network "Elevator/networkcom"
 	"fmt"
 )
 
-func PeersUpdate(drv_buttons chan elevio.ButtonEvent, peerUpdateCh chan PeerUpdate, helloRx chan network.HelloMsg){
+func PeersUpdate(drv_buttons chan elevio.ButtonEvent, peerUpdateCh chan PeerUpdate, helloRx chan network.HelloMsg) {
 	fmt.Printf("peers")
 	for {
 		select {
@@ -18,22 +17,22 @@ func PeersUpdate(drv_buttons chan elevio.ButtonEvent, peerUpdateCh chan PeerUpda
 			fmt.Printf("  Lost:     %q\n", p.Lost)
 			network.AliveElevatorsID = p.Peers
 
-		case elev := <-helloRx:
-			flag := 0
-			for i, element := range network.ListOfElevators{
-				if element.ID == elev.Elevator.ID{
-					network.ListOfElevators[i] = elev.Elevator
-					flag = 1
-				}
-			}
-			if flag == 0 {
-				network.ListOfElevators = append(network.ListOfElevators, elev.Elevator)
+		// case elev := <-helloRx:
+		// 	flag := 0
+		// 	for i, element := range network.ListOfElevators {
+		// 		if element.ID == elev.Elevator.ID {
+		// 			network.ListOfElevators[i] = elev.Elevator
+		// 			flag = 1
+		// 		}
+		// 	}
+		// 	if flag == 0 {
+		// 		network.ListOfElevators = append(network.ListOfElevators, elev.Elevator)
 
-			}
+		// 	}
 
-			fmt.Printf("Received: %#v\n", elev)
-		case btn := <-drv_buttons:
-			utils.Elevator_glob.Requests[btn.Floor][btn.Button] = true
+			// fmt.Printf("Received: %#v\n", elev)
+			// case btn := <-drv_buttons:
+			// 	utils.Elevator_glob.Requests[btn.Floor][btn.Button] = true
 		}
 	}
 

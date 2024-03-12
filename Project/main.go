@@ -9,12 +9,16 @@ import (
 	"Elevator/utils"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
 func main() {
+	var id string = os.Args[1]
+	id_int, _ := strconv.Atoi(id)
+	port := 15657 + id_int
 
-	elevio.Init("localhost:15657", utils.N_FLOORS)
+	elevio.Init("localhost:"+strconv.Itoa((port)), utils.N_FLOORS)
 
 	drv_buttons := make(chan elevio.ButtonEvent)
 	drv_floors := make(chan int)
@@ -27,10 +31,9 @@ func main() {
 	go elevio.PollStopButton(drv_stop)
 
 	utils.FsmOnInitBetweenFloors()
-    drv_buttons2 := make(chan elevio.ButtonEvent)
-    go elevio.PollButtons(drv_buttons2)
+	drv_buttons2 := make(chan elevio.ButtonEvent)
+	go elevio.PollButtons(drv_buttons2)
 
-    var id string = os.Args[1]
 	// We make a channel for receiving updates on the id's of the peers that are
 	//  alive on the network
 	peerUpdateCh := make(chan peers.PeerUpdate)
@@ -56,17 +59,17 @@ func main() {
 		helloMsg := network.HelloMsg{e, 0}
 		for {
 			helloMsg.Iter++
-            utils.Elevator_glob.ID = id
-            helloMsg.Elevator = utils.Elevator_glob   
+			utils.Elevator_glob.ID = id
+			helloMsg.Elevator = utils.Elevator_glob
 			helloTx <- helloMsg
 			time.Sleep(1 * time.Second)
 		}
 	}()
 	fmt.Println("Started")
 
-    go hallassign.FSM(helloRx, drv_buttons,  drv_floors, drv_obstr, drv_stop)
+	go hallassign.FSM( helloTx ,helloRx, drv_buttons, drv_floors, drv_obstr, drv_stop)
 
-    go peers.PeersUpdate(drv_buttons, peerUpdateCh, helloRx)
+	go peers.PeersUpdate(drv_buttons, peerUpdateCh, helloRx)
 
-    select{}
+	select {}
 }

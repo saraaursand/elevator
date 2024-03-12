@@ -12,15 +12,15 @@ import (
 // This means they must start with a capital letter, so we need to use field renaming struct tags to make them camelCase
 
 type HRAElevState struct {
-	ElevID      string    `json:"id"`
-	Behaviour   string `json:"behaviour"`
-	Floor       int    `json:"floor"`
-	Direction   string `json:"direction"`
+	ElevID      string               `json:"id"`
+	Behaviour   string               `json:"behaviour"`
+	Floor       int                  `json:"floor"`
+	Direction   string               `json:"direction"`
 	CabRequests [utils.N_FLOORS]bool `json:"cabRequests"`
 }
 
 type HRAElevStatetemp struct {
-	ElevID      string                     `json:"id"`
+	ElevID      string                  `json:"id"`
 	Behaviour   utils.ElevatorBehaviour `json:"behaviour"`
 	Floor       int                     `json:"floor"`
 	Direction   utils.Dirn              `json:"direction"`
@@ -86,7 +86,7 @@ func CalculateCostFunc(elevators []utils.Elevator) map[string][utils.N_FLOORS][2
 	}
 
 	//runds the hall_request_assigner file
-	ret, err := exec.Command( hraExecutable, "-i", string(jsonBytes)).CombinedOutput()
+	ret, err := exec.Command(hraExecutable, "-i", string(jsonBytes)).CombinedOutput()
 	if err != nil {
 		fmt.Println("exec.Command error: ", err)
 		fmt.Println(string(ret))
@@ -101,7 +101,7 @@ func CalculateCostFunc(elevators []utils.Elevator) map[string][utils.N_FLOORS][2
 		//return
 	}
 
-	fmt.Printf("output: \n")
+	// fmt.Printf("output: \n")
 	for k, v := range output {
 		fmt.Printf("%6v :  %+v\n", k, v)
 	}
@@ -111,7 +111,7 @@ func CalculateCostFunc(elevators []utils.Elevator) map[string][utils.N_FLOORS][2
 
 func GetHallCalls(elevators []utils.Elevator) [utils.N_FLOORS][2]bool {
 	var n_elevators int = len(elevators)
-	fmt.Println(elevators)
+	// fmt.Println(elevators)
 
 	for floor := 0; floor < utils.N_FLOORS; floor++ {
 		up := elevators[0].Requests[floor][0]
@@ -123,10 +123,9 @@ func GetHallCalls(elevators []utils.Elevator) [utils.N_FLOORS][2]bool {
 
 		GlobalHallCalls[floor] = [2]bool{up, down}
 	}
-	fmt.Println(GlobalHallCalls)
+	fmt.Println("GlobalHallCalls", GlobalHallCalls)
 	return GlobalHallCalls
 }
-
 
 func GetCabCalls(elevator utils.Elevator) [utils.N_FLOORS]bool {
 	CabCalls := [utils.N_FLOORS]bool{}
